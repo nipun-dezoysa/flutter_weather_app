@@ -63,6 +63,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
             final currentData = data['list'][0];
             final currentTemp = currentData['main']['temp'];
             final currentSky = currentData['weather'][0]['main'];
+            final currentPressure = currentData['main']['pressure'];
+            final currentWindSpeed = currentData['wind']['speed'];
+            final currentHumidity = currentData['main']['humidity'];
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -114,41 +117,27 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     height: 20,
                   ),
                   const Text(
-                    "Weather Forecast",
+                    "Hourly Forecast",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  const SingleChildScrollView(
+                  SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        HourlyForecastItem(
-                          icon: Icons.cloud,
-                          time: "09:00",
-                          value: "300 F",
-                        ),
-                        HourlyForecastItem(
-                          icon: Icons.cloud,
-                          time: "09:00",
-                          value: "300 F",
-                        ),
-                        HourlyForecastItem(
-                          icon: Icons.cloud,
-                          time: "09:00",
-                          value: "300 F",
-                        ),
-                        HourlyForecastItem(
-                          icon: Icons.cloud,
-                          time: "09:00",
-                          value: "300 F",
-                        ),
-                        HourlyForecastItem(
-                          icon: Icons.cloud,
-                          time: "09:00",
-                          value: "300 F",
-                        ),
+                        for (int i = 1; i < 6; i++)
+                          HourlyForecastItem(
+                            icon: data['list'][i]['weather'][0]['main'] ==
+                                        'Clouds' ||
+                                    data['list'][i]['weather'][0]['main'] ==
+                                        'Rain'
+                                ? Icons.cloud
+                                : Icons.sunny,
+                            time: data['list'][i]['dt'].toString(),
+                            value: data['list'][i]['main']['temp'].toString(),
+                          )
                       ],
                     ),
                   ),
@@ -162,23 +151,23 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       AdditionalInfoItem(
                         icon: Icons.water_drop,
                         lable: "Humidity",
-                        value: "91",
+                        value: currentHumidity.toString(),
                       ),
                       AdditionalInfoItem(
-                        icon: Icons.water_drop,
-                        lable: "Humidity",
-                        value: "7.5",
+                        icon: Icons.air,
+                        lable: "Wind Speed",
+                        value: currentWindSpeed.toString(),
                       ),
                       AdditionalInfoItem(
                         icon: Icons.beach_access,
                         lable: "Pressure",
-                        value: "1000",
+                        value: currentPressure.toString(),
                       )
                     ],
                   )
