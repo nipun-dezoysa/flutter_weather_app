@@ -65,53 +65,72 @@ class WeatherScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              Text(
+              const Text(
                 "Weather Forecast",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 20,
               ),
-              const Row(
-                children: [
-                  SizedBox(
-                    width: 100,
-                    child: Card(
-                      elevation: 6,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              "09:00",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Icon(
-                              Icons.cloud,
-                              size: 32,
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text("300 F"),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+              const SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    HourlyForecastItem(),
+                    HourlyForecastItem(),
+                    HourlyForecastItem(),
+                    HourlyForecastItem(),
+                    HourlyForecastItem(),
+                  ],
+                ),
               ),
-              const Placeholder(fallbackHeight: 150),
               const SizedBox(
                 height: 20,
+              ),
+              const Text(
+                "Additional Information",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const Placeholder(fallbackHeight: 150),
             ],
           ),
         ));
+  }
+}
+
+class HourlyForecastItem extends StatelessWidget {
+  const HourlyForecastItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 6,
+      child: Container(
+        width: 100,
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Column(
+          children: [
+            Text(
+              "09:00",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Icon(
+              Icons.cloud,
+              size: 32,
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Text("300 F"),
+          ],
+        ),
+      ),
+    );
   }
 }
