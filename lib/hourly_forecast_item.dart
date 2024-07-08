@@ -17,13 +17,13 @@ class HourlyForecastItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
         ),
-        child:  Column(
+        child: Column(
           children: [
             Text(
-             time,
+              time,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-           const SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Icon(

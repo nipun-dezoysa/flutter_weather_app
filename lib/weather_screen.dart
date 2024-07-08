@@ -14,6 +14,12 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getCurrentWeather();
+  }
+
   Future getCurrentWeather() async {
     await dotenv.load(fileName: ".env");
     String key = dotenv.get('API_KEY');
