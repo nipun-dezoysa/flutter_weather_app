@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_weather_app/additional_info_item.dart';
@@ -21,12 +21,20 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Future getCurrentWeather() async {
-    await dotenv.load(fileName: ".env");
-    String key = dotenv.get('API_KEY');
-    String city = "London";
-    final res = await http.get(Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?q=$city,uk&APPID=$key'));
-    print(res.body);
+    try {
+      await dotenv.load(fileName: ".env");
+      String key = dotenv.get('API_KEY');
+      String city = "London";
+      final res = await http.get(Uri.parse(
+          'https://api.openweathermap.org/data/2.5/forecast?q=$city,uk&APPID=$key'));
+      final data = jsonDecode(res.body);
+      if (data['cod'] != '200') {
+        throw 'An Unexpected error occurred';
+      }
+      
+    } catch (e) {
+      throw e.toString();
+    }
   }
 
   @override
