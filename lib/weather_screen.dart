@@ -6,9 +6,14 @@ import 'package:flutter_weather_app/additional_info_item.dart';
 import 'package:flutter_weather_app/hourly_forecast_item.dart';
 import 'package:http/http.dart' as http;
 
-class WeatherScreen extends StatelessWidget {
+class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
 
+  @override
+  State<WeatherScreen> createState() => _WeatherScreenState();
+}
+
+class _WeatherScreenState extends State<WeatherScreen> {
   Future getCurrentWeather() async {
     await dotenv.load(fileName: ".env");
     String key = dotenv.get('API_KEY');
