@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_weather_app/additional_info_item.dart';
 import 'package:flutter_weather_app/hourly_forecast_item.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -14,6 +15,8 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  late Future<Map<String, dynamic>> weather;
+
   Future<Map<String, dynamic>> getCurrentWeather() async {
     try {
       await dotenv.load(fileName: ".env");
@@ -34,6 +37,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    weather = getCurrentWeather();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -45,12 +54,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
           actions: [
             IconButton(
               icon: const Icon(Icons.refresh),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  weather = getCurrentWeather();
+                });
+              },
             ),
           ],
         ),
         body: FutureBuilder(
-          future: getCurrentWeather(),
+          future: weather,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -123,23 +136,41 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (int i = 1; i < 6; i++)
-                          HourlyForecastItem(
-                            icon: data['list'][i]['weather'][0]['main'] ==
-                                        'Clouds' ||
-                                    data['list'][i]['weather'][0]['main'] ==
-                                        'Rain'
-                                ? Icons.cloud
-                                : Icons.sunny,
-                            time: data['list'][i]['dt'].toString(),
-                            value: data['list'][i]['main']['temp'].toString(),
-                          )
-                      ],
-                    ),
+                  // SingleChildScrollView(
+                  //   scrollDirection: Axis.horizontal,
+                  //   child: Row(
+                  //     children: [
+                  //       for (int i = 1; i < 6; i++)
+                  //         HourlyForecastItem(
+                  //           icon: data['list'][i]['weather'][0]['main'] ==
+                  //                       'Clouds' ||
+                  //                   data['list'][i]['weather'][0]['main'] ==
+                  //                       'Rain'
+                  //               ? Icons.cloud
+                  //               : Icons.sunny,
+                  //           time: data['list'][i]['dt'].toString(),
+                  //           value: data['list'][i]['main']['temp'].toString(),
+                  //         )
+                  //     ],
+                  //   ),
+                  // ),
+                  SizedBox(
+                    height: 120,
+                    child: ListView.builder(
+                        itemCount: 5,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          final hourlyForecast = data['list'][index + 1];
+                          final hourlySky =
+                              data['list'][index + 1]['weather'][0]['main'];
+                          final time = DateTime.parse(hourlyForecast['dt_txt']);
+                          return HourlyForecastItem(
+                              icon: hourlySky == 'Clouds' || hourlySky == 'Rain'
+                                  ? Icons.cloud
+                                  : Icons.sunny,
+                              time: DateFormat.Hm().format(time),
+                              value: hourlyForecast['main']['temp'].toString());
+                        }),
                   ),
                   const SizedBox(
                     height: 20,
